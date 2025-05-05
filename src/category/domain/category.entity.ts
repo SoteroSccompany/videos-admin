@@ -1,5 +1,5 @@
 export type CategoryContructorProps = {
-    category_id?: string;
+    category_id: string;
     name: string;
     description: string | null;
     is_active: boolean;
@@ -9,8 +9,8 @@ export type CategoryContructorProps = {
 
 export type CategoryCreateCommand = {
     name: string;
-    description: string | null;
-    is_active: boolean;
+    description?: string | null;
+    is_active?: boolean;
 }
 
 export class Category {
