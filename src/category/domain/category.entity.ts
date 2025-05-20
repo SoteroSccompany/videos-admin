@@ -83,7 +83,7 @@ export class Category extends Entity {
         }
     }
 
-    get entity_id(): string {
-        return this.category_id.id;
+    get entity_id(): Uuid {
+        return this.category_id;
     }
 }
