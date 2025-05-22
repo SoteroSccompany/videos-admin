@@ -1,6 +1,7 @@
-import { Entity } from "../../domain/entity";
-import { IRepository } from "../../domain/repository/repository-interface";
-import { ValueObject } from "../../domain/value-object";
+import { Entity } from "../../../domain/entity";
+import { NotFoundError } from "../../../domain/error/not-found.error";
+import { IRepository } from "../../../domain/repository/repository-interface";
+import { ValueObject } from "../../../domain/value-object";
 
 
 export abstract class InMemoryRepository<E extends Entity, EntityId extends ValueObject> implements IRepository<E, EntityId> {
@@ -18,7 +19,7 @@ export abstract class InMemoryRepository<E extends Entity, EntityId extends Valu
     async update(entity: E): Promise<void> {
         const indexFound = this.items.findIndex((item) => item.entity_id.equals(entity.entity_id));
         if (indexFound === -1) {
-            throw new Error(`Entity with id ${entity.entity_id} not found`);
+            throw new NotFoundError(entity.entity_id, this.getEntity());
         }
         this.items[indexFound] = entity;
     }
@@ -35,7 +36,7 @@ export abstract class InMemoryRepository<E extends Entity, EntityId extends Valu
         return this._get(entity_id);
     }
 
-    protected _get(entity_id: EntityId) {
+    protected async _get(entity_id: EntityId) {
         const item = this.items.find((item) => item.entity_id.equals(entity_id));
         return typeof item === 'undefined' ? null : item;
 
