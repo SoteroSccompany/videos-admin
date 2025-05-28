@@ -75,6 +75,59 @@ describe("SeachParams Unit testss", () => {
 
     })
 
+    it("SortDirProp", () => {
+        let params = new SearchParams();
+        expect(params.sort_dir).toBeNull();
+
+        params = new SearchParams({ sort_dir: null });
+        expect(params.sort_dir).toBeNull();
+
+        params = new SearchParams({ sort_dir: undefined });
+        expect(params.sort_dir).toBeNull();
+
+        //@ts-ignore
+        params = new SearchParams({ sort_dir: "" });
+        expect(params.sort_dir).toBeNull();
+
+        const arrange = [
+            { sort_dir: null, expected: "asc" },
+            { sort_dir: undefined, expected: "asc" },
+            { sort_dir: "", expected: "asc" },
+            { sort_dir: "fake", expected: "asc" },
+            { sort_dir: 0, expected: "asc" },
+            { sort_dir: "asc", expected: "asc" },
+            { sort_dir: "desc", expected: "desc" },
+            { sort_dir: "ASC", expected: "asc" },
+            { sort_dir: "DESC", expected: "desc" }
+        ];
+        arrange.forEach((item) => {
+            expect(new SearchParams({ sort: "field", sort_dir: item.sort_dir as any }).sort_dir).toBe(item.expected);
+        });
+
+    })
+
+    it("FilterProp", () => {
+        const params = new SearchParams();
+        expect(params.filter).toBeNull();
+
+        const arrange = [
+            { filter: null, expected: null },
+            { filter: undefined, expected: null },
+            { filter: "", expected: null as any },
+            { filter: 0, expected: "0" },
+            { filter: -1, expected: "-1" },
+            { filter: 5.5, expected: "5.5" },
+            { filter: true, expected: "true" },
+            { filter: false, expected: "false" },
+            { filter: {}, expected: "[object Object]" },
+            { filter: "field", expected: "field" }
+        ];
+        arrange.forEach((item) => {
+            expect(new SearchParams({ filter: item.filter as any }).filter).toBe(item.expected);
+        });
+
+    })
+
 
 
 });
