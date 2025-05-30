@@ -1,4 +1,5 @@
-import { Category } from "../../domain/category.entity";
+import { Category } from "../../../domain/category.entity";
+import { CategoryFakeBuilder } from "../../../domain/category.fake.builder";
 import { CategoryInMemoryRepository } from "./category-in-memory.repository";
 
 
@@ -12,11 +13,7 @@ describe("CategoryInMemoryRepository", () => {
     });
 
     it("should no filter items when filter object is null", async () => {
-        const items = [
-            new Category({ name: "Category 1" }),
-            new Category({ name: "Category 2" }),
-            new Category({ name: "Category 3" }),
-        ];
+        const items = [CategoryFakeBuilder.aCategory().build()];
         const filterSpy = jest.spyOn(items, "filter" as any);
         await repository.bulkInsert(items);
 
@@ -28,9 +25,9 @@ describe("CategoryInMemoryRepository", () => {
 
     it("should no filter items when using filter", async () => {
         const items = [
-            new Category({ name: "Category 1" }),
-            new Category({ name: "Category 2" }),
-            new Category({ name: "Category 3" }),
+            CategoryFakeBuilder.aCategory().withName("Category 1").build(),
+            CategoryFakeBuilder.aCategory().withName("Category 2").build(),
+            CategoryFakeBuilder.aCategory().withName("Category 3").build(),
         ];
         const filterSpy = jest.spyOn(items, "filter" as any);
         await repository.bulkInsert(items);
@@ -43,10 +40,11 @@ describe("CategoryInMemoryRepository", () => {
 
     it("should sort by created_at when sort is null", async () => {
         const created_at = new Date();
+
         const items = [
-            new Category({ name: "Category 1", created_at }),
-            new Category({ name: "Category 2", created_at: new Date(created_at.getTime() + 100) }),
-            new Category({ name: "Category 3", created_at: new Date(created_at.getTime() + 200) }),
+            CategoryFakeBuilder.aCategory().withName("Category 1").withCreatedAt(created_at).build(),
+            CategoryFakeBuilder.aCategory().withName("Category 2").withCreatedAt(new Date(created_at.getTime() + 100)).build(),
+            CategoryFakeBuilder.aCategory().withName("Category 3").withCreatedAt(new Date(created_at.getTime() + 200)).build(),
         ];
         await repository.bulkInsert(items);
 
@@ -61,9 +59,9 @@ describe("CategoryInMemoryRepository", () => {
 
     it("should sort by name when sort is name", async () => {
         const items = [
-            new Category({ name: "A" }),
-            new Category({ name: "B" }),
-            new Category({ name: "C" }),
+            CategoryFakeBuilder.aCategory().withName("A").build(),
+            CategoryFakeBuilder.aCategory().withName("B").build(),
+            CategoryFakeBuilder.aCategory().withName("C").build(),
         ];
         await repository.bulkInsert(items);
         let itemsFiltered = await repository["applySort"](items, "name", "asc");

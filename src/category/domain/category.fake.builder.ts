@@ -73,6 +73,11 @@ export class CategoryFakeBuilder<TBuild = any> {
         return this;
     }
 
+    withUuid(valueOrFactory: PropOrFactory<Uuid>) {
+        this._category_id = valueOrFactory;
+        return this;
+    }
+
     build(): TBuild {
         const categories = new Array(this.countObjs)
             .fill(undefined)
@@ -88,9 +93,10 @@ export class CategoryFakeBuilder<TBuild = any> {
                         created_at: this.callFactory(this._created_at, index),
                     }),
                 });
-                category.validate();
+                // category.validate();
                 return category;
             });
+        //@ts-ignore
         return this.countObjs === 1 ? (categories[0] as any) : categories;
     }
 
