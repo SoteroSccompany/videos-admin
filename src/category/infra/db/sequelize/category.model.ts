@@ -1,7 +1,19 @@
 import { Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { extensions } from "sequelize/types/utils/validator-extras";
+
+
+
+export type CategoryModelProps = {
+    category_id: string; // UUID
+    name: string;
+    description: string | null;
+    is_active: boolean;
+    created_at: Date;
+}
+
 
 @Table({ tableName: 'categories', timestamps: false })
-export class CategoryModel extends Model {
+export class CategoryModel extends Model<CategoryModelProps> {
 
     @PrimaryKey
     @Column({ type: DataType.UUID, primaryKey: true, allowNull: false })

@@ -24,7 +24,6 @@ describe("Category Unit Tests", () => {
             expect(category.description).toBeNull();
             expect(category.is_active).toBeTruthy();
             expect(category.created_at).toBeInstanceOf(Date);
-            expect(category.updated_at).toBeInstanceOf(Date);
         });
 
         test("should create a category with all values", () => {
@@ -57,7 +56,6 @@ describe("Category Unit Tests", () => {
             expect(category.description).toBeNull();
             expect(category.is_active).toBeTruthy();
             expect(category.created_at).toBeInstanceOf(Date);
-            expect(category.updated_at).toBeInstanceOf(Date);
             expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -69,7 +67,6 @@ describe("Category Unit Tests", () => {
             expect(category.description).toBe("description");
             expect(category.is_active).toBeTruthy();
             expect(category.created_at).toBeInstanceOf(Date);
-            expect(category.updated_at).toBeInstanceOf(Date);
             expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -81,7 +78,6 @@ describe("Category Unit Tests", () => {
             expect(category.description).toBeNull();
             expect(category.is_active).toBe(false);
             expect(category.created_at).toBeInstanceOf(Date);
-            expect(category.updated_at).toBeInstanceOf(Date);
             expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -152,7 +148,6 @@ describe("Category Unit Tests", () => {
             expect(json.description).toBeNull();
             expect(json.is_active).toBe(true);
             expect(json.created_at).toBeInstanceOf(Date);
-            expect(json.updated_at).toBeInstanceOf(Date);
         });
 
 
