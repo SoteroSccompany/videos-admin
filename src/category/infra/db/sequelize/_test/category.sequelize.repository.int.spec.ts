@@ -6,6 +6,7 @@ import { Uuid } from "../../../../../shared/domain/value-objects/uui.vo";
 import { NotFoundError } from "../../../../../shared/domain/error/not-found.error";
 import { CategoryModelMapper } from "../category-model-mapper";
 import { CategorySearchParams, CategorySearchResult } from "../../../../domain/category.repository";
+import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
 
 
 
@@ -13,17 +14,10 @@ import { CategorySearchParams, CategorySearchResult } from "../../../../domain/c
 describe("CategorySequelizeRepository Integration Tests", () => {
 
 
-    let sequelize: Sequelize;
+    setupSequelize({ models: [CategoryModel] });
     let repository: CategorySequelizeRepository;
 
     beforeEach(async () => {
-        sequelize = new Sequelize({
-            dialect: 'sqlite',
-            storage: ':memory:',
-            models: [CategoryModel],
-            logging: false,
-        })
-        await sequelize.sync({ force: true });
         repository = new CategorySequelizeRepository(CategoryModel);
     });
 

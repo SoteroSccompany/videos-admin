@@ -4,6 +4,7 @@ import { CategoryModelMapper } from "../category-model-mapper";
 import { EntityValidationError } from "../../../../../shared/domain/validators/validation.errors";
 import { Uuid } from "../../../../../shared/domain/value-objects/uui.vo";
 import { Category } from "../../../../domain/category.entity";
+import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
 
 
 
@@ -11,17 +12,7 @@ import { Category } from "../../../../domain/category.entity";
 
 describe('CategoryModelMapper Integration Tests', () => {
 
-    let sequelize: Sequelize;
-
-    beforeEach(async () => {
-        sequelize = new Sequelize({
-            dialect: 'sqlite',
-            storage: ':memory:',
-            models: [CategoryModel],
-            logging: false,
-        })
-        await sequelize.sync({ force: true });
-    });
+    setupSequelize({ models: [CategoryModel] });
 
     it("should throw an error when entity is invalid", () => {
         const model = CategoryModel.build({
