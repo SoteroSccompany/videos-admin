@@ -1,27 +1,26 @@
-import { NotFoundError } from "../../../../shared/domain/error/not-found.error";
-import { InvalidUuidError, Uuid } from "../../../../shared/domain/value-objects/uui.vo";
-import { Category } from "../../../domain/category.entity";
-import { CategoryInMemoryRepository } from "../../../infra/db/in-memory/category-in-memory.repository";
-import { CreateCategoryUseCase } from "../../create-category.use-case";
+import { NotFoundError } from "../../../../../shared/domain/error/not-found.error";
+import { InvalidUuidError, Uuid } from "../../../../../shared/domain/value-objects/uui.vo";
+import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
+import { Category } from "../../../../domain/category.entity";
+import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
+import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category.sequelize.repository";
 import { UpdateCategoryUseCase } from "../../update-category.use-case";
 
 
 
 
-describe("UpdateCategoryUseCase Unit Tests", () => {
+describe("UpdateCategoryUseCase Integration Tests", () => {
+    setupSequelize({ models: [CategoryModel] });
     let useCase: UpdateCategoryUseCase;
-    let repository: CategoryInMemoryRepository;
+    let repository: CategorySequelizeRepository;
 
     beforeEach(() => {
-        repository = new CategoryInMemoryRepository();
+        repository = new CategorySequelizeRepository(CategoryModel);
         useCase = new UpdateCategoryUseCase(repository);
     });
 
 
     it("shold throw error when entity not found", async () => {
-        await expect(() =>
-            useCase.execute({ id: "fake id" })
-        ).rejects.toThrow("Invalid UUID: fake id");
 
         const uuid = new Uuid();
 
@@ -34,15 +33,20 @@ describe("UpdateCategoryUseCase Unit Tests", () => {
     it("should update a category", async () => {
         const spyUpdate = jest.spyOn(repository, "update");
         const entity = Category.fake().aCategory().withName("test").build();
-        repository.items = [entity];
+
+        repository.insert(entity);
+
+
         let output = await useCase.execute({ id: entity.category_id.id, name: "testUpdate" });
         expect(spyUpdate).toHaveBeenCalledTimes(1);
+        const expectedFind = await repository.findById(entity.category_id);
+        expect(expectedFind).toBeDefined();
         expect(output).toStrictEqual({
-            id: repository.items[0].category_id.id,
-            name: repository.items[0].name,
-            description: repository.items[0].description,
-            is_active: repository.items[0].is_active,
-            created_at: repository.items[0].created_at,
+            id: expectedFind.category_id.id,
+            name: expectedFind.name,
+            description: expectedFind.description,
+            is_active: expectedFind.is_active,
+            created_at: expectedFind.created_at,
         });
 
 
