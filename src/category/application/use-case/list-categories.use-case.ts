@@ -2,14 +2,12 @@ import { PaginationOutPut, PaginationOutputMapper } from "../../../shared/applic
 import { IUseCase } from "../../../shared/application/use-case.interface";
 import { NotFoundError } from "../../../shared/domain/error/not-found.error";
 import { SortDirection } from "../../../shared/domain/repository/search-params";
-import { Uuid } from "../../../shared/domain/value-objects/uui.vo";
-import { Category } from "../../domain/category.entity";
 import { CategoryFilter, CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../domain/category.repository";
 import { CategoryOutput, CategoryOutputMapper } from "./common/category-output";
 
 
 
-export class ListCategoryUseCase
+export class ListCategoriesUseCase
     implements IUseCase<ListCategoryUseCaseInput, ListCategoryUseCaseOutput> {
 
     constructor(private readonly categoryRepo: ICategoryRepository) { }

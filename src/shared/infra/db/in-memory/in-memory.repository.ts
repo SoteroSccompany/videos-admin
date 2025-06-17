@@ -89,7 +89,6 @@ export abstract class InMemorySearchableRepository<
         if (!sort || !this.sortableFields.includes(sort)) {
             return items;
         }
-        const direction = sort_dir === 'desc' ? -1 : 1;
         return [...items].sort((a, b) => {
             //@ts-ignore
             const aValue = custom_getter ? custom_getter(sort, a) : a[sort];
