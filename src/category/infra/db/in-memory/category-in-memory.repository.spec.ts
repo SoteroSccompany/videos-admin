@@ -77,8 +77,18 @@ describe("CategoryInMemoryRepository", () => {
             items[0]
         ]);
 
+    });
+
+    it("should create category by getEntity", () => {
+        const spyGetEntity = jest.spyOn(repository, 'getEntity');
+        const CategoryEntity = repository.getEntity();
+        const category = new CategoryEntity({ name: "teste" });
+        expect(category).toBeInstanceOf(Category);
+        expect(spyGetEntity).toHaveBeenCalled();
 
     });
+
+
 
 
 });

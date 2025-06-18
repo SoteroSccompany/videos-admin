@@ -13,7 +13,5 @@ export abstract class ValueObject {
         }
 
         return isEqual(this, vo);
-
-
     }
 }

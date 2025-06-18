@@ -25,4 +25,11 @@ describe("UUID Value Object Unit Tests", () => {
         expect(validateSpy).toHaveBeenCalled();
     });
 
+    it("should message erro set", () => {
+        const message = 'testeMessage'
+        const error = new InvalidUuidError(message);
+        expect(error.message).toBe(message);
+        expect(error.name).toBe("InvalidUuidError");
+    });
+
 });

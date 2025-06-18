@@ -83,9 +83,7 @@ export class CategoryFakeBuilder<TBuild = any> {
             .fill(undefined)
             .map((_, index) => {
                 const category = new Category({
-                    category_id: !this._category_id
-                        ? undefined
-                        : this.callFactory(this._category_id, index),
+                    category_id: !this._category_id ? undefined : this.callFactory(this._category_id, index),
                     name: this.callFactory(this._name, index),
                     description: this.callFactory(this._description, index),
                     is_active: this.callFactory(this._is_active, index),
