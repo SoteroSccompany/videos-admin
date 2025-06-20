@@ -30,6 +30,16 @@ describe("UpdateCategoryUseCase Unit Tests", () => {
 
     });
 
+    it("shold throw error when entity not valid", async () => {
+        const aggregate = new Category({ name: "Movie" })
+        repository.items = [aggregate];
+
+        await expect(() =>
+            useCase.execute({ id: aggregate.category_id.id, name: "test".repeat(256) })
+        ).rejects.toThrow('Entity Validation Error');
+
+    });
+
     it("should update a category", async () => {
         const spyUpdate = jest.spyOn(repository, "update");
         const entity = Category.fake().aCategory().withName("test").build();

@@ -1,6 +1,8 @@
+import { IsNotEmptyObject } from "class-validator";
 import { Uuid } from "../../../../shared/domain/value-objects/uui.vo";
 import { Category } from "../../../domain/category.entity";
 import { CategoryModel } from "./category.model";
+import { EntityValidationError } from "../../../../shared/domain/validators/validation.errors";
 
 
 
@@ -17,15 +19,19 @@ export class CategoryModelMapper {
     }
 
     static toEntity(model: CategoryModel): Category {
-        const entity = new Category({
+        const category = new Category({
             category_id: new Uuid(model.category_id),
             name: model.name,
             description: model.description,
             is_active: model.is_active,
             created_at: model.created_at,
         });
-        Category.validate(entity);
-        return entity;
+        category.validate();
+        if (category.notification.hasError()) {//Assim permite que se tenha mais controle e dentro do caso de uso em si vai ter isso. 
+            throw new EntityValidationError(category.notification.toJson());
+        }
+
+        return category;
     }
 
 }

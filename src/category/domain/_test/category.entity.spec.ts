@@ -5,10 +5,6 @@ import { Category } from "../category.entity";
 
 
 describe("Category Unit Tests", () => {
-    let validateSpy: any;
-    beforeEach(() => {
-        validateSpy = jest.spyOn(Category, "validate");
-    });
 
 
     describe("constructor", () => {
@@ -56,7 +52,6 @@ describe("Category Unit Tests", () => {
             expect(category.description).toBeNull();
             expect(category.is_active).toBeTruthy();
             expect(category.created_at).toBeInstanceOf(Date);
-            expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
         test("Should create a category with description", () => {
@@ -67,7 +62,6 @@ describe("Category Unit Tests", () => {
             expect(category.description).toBe("description");
             expect(category.is_active).toBeTruthy();
             expect(category.created_at).toBeInstanceOf(Date);
-            expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
         test("Should create a category with is_active", () => {
@@ -78,7 +72,6 @@ describe("Category Unit Tests", () => {
             expect(category.description).toBeNull();
             expect(category.is_active).toBe(false);
             expect(category.created_at).toBeInstanceOf(Date);
-            expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
 
@@ -103,7 +96,6 @@ describe("Category Unit Tests", () => {
             category.changeName("New Movie");
             expect(category.category_id).toBeInstanceOf(Uuid);
             expect(category.name).toBe("New Movie");
-            expect(validateSpy).toHaveBeenCalledTimes(2);
         });
 
         test("Should change description", () => {
@@ -114,7 +106,6 @@ describe("Category Unit Tests", () => {
             expect(category.category_id).toBeInstanceOf(Uuid);
             expect(category.name).toBe("Movie");
             expect(category.description).toBe("New description");
-            expect(validateSpy).toHaveBeenCalledTimes(2);
         });
 
         test("Should activate category", () => {
@@ -125,7 +116,6 @@ describe("Category Unit Tests", () => {
             expect(category.category_id).toBeInstanceOf(Uuid);
             expect(category.name).toBe("Movie");
             expect(category.is_active).toBe(true);
-            expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
         test("Should deactivate category", () => {
@@ -136,7 +126,6 @@ describe("Category Unit Tests", () => {
             expect(category.category_id).toBeInstanceOf(Uuid);
             expect(category.name).toBe("Movie");
             expect(category.is_active).toBe(false);
-            expect(validateSpy).toHaveBeenCalledTimes(1);
         });
 
         test("Should convert to json", () => {
@@ -162,32 +151,26 @@ describe("CategoryValidator", () => {
 
         test("should an invalid category with name property", () => {
 
-            expect(() => Category.create({ name: null })).containsErrorMessages({
-                name: [
-                    "name should not be empty",
-                    "name must be a string",
-                    "name must be shorter than or equal to 255 characters",
-                ]
-            })
+            const category = Category.create({ name: "t".repeat(256) });
+            expect(category.notification.hasError()).toBe(true);
+            expect(category.notification).notificationContainsErrorMessage([
+                {
+                    name: ["name must be shorter than or equal to 255 characters"]
+                }
+            ])
 
-            expect(() => Category.create({ name: "" })).containsErrorMessages({
-                name: [
-                    "name should not be empty"
-                ]
-            })
+        });
 
-            expect(() => Category.create({ name: 5 as any })).containsErrorMessages({
-                name: [
-                    "name must be a string",
-                    "name must be shorter than or equal to 255 characters"
-                ]
-            })
+        test("should a change name invalid", () => {
 
-            expect(() => Category.create({ name: "t".repeat(256) })).containsErrorMessages({
-                name: [
-                    "name must be shorter than or equal to 255 characters"
-                ]
-            })
+            const category = Category.create({ name: "Movie" });
+            category.changeName("t".repeat((256)))
+            expect(category.notification.hasError()).toBe(true);
+            expect(category.notification).notificationContainsErrorMessage([
+                {
+                    name: ["name must be shorter than or equal to 255 characters"]
+                }
+            ])
 
         });
 

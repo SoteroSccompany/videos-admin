@@ -1,5 +1,6 @@
 import { validateSync } from "class-validator";
 import { FieldsErrors, IValidatorFields } from "./validator-fields.interface";
+import { Notification } from "./notification";
 
 
 export abstract class ClassValidatorFields<PropsValidated> implements IValidatorFields<PropsValidated> {
@@ -7,18 +8,19 @@ export abstract class ClassValidatorFields<PropsValidated> implements IValidator
     errors: FieldsErrors | null = null;
     validatedData: PropsValidated | null = null;
 
-    validate(data: any): boolean {
-        const erros = validateSync(data);
-        if (erros.length) {
-            this.errors = {};
-            for (const error of erros) {
+    validate(notifications: Notification, data: any, fields: string[]): boolean {
+        const errors = validateSync(data, {
+            groups: fields
+        });
+        if (errors.length) {
+            for (const error of errors) {
                 const field = error.property;
-                this.errors[field] = Object.values(error.constraints!);
+                Object.values(error.constraints!).forEach(message => {
+                    notifications.addError(message, field)
+                })
             }
-        } else {
-            this.validatedData = data;
         }
-        return !erros.length;
+        return !errors.length;
     }
 
 }
