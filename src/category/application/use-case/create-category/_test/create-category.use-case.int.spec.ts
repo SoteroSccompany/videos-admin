@@ -2,7 +2,8 @@ import { Uuid } from "../../../../../shared/domain/value-objects/uui.vo";
 import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
 import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
 import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category.sequelize.repository";
-import { CreateCategoryUseCase } from "../../create-category.use-case";
+import { CreateCategoryInput } from "../create-category-input";
+import { CreateCategoryUseCase } from "../create-category.use-case";
 
 
 
@@ -21,7 +22,8 @@ describe("CreateCategoryUseCase Integration Tests", () => {
 
 
     it("Should create a category", async () => {
-        let output = await useCase.execute({ name: "test" });
+        let input = new CreateCategoryInput({ name: "test" })
+        let output = await useCase.execute(input);
         let entity = await repository.findById(new Uuid(output.id));
         expect(output).toStrictEqual({
             id: entity.category_id.id,

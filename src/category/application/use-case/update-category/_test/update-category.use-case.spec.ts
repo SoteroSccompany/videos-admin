@@ -2,7 +2,8 @@ import { NotFoundError } from "../../../../../shared/domain/error/not-found.erro
 import { InvalidUuidError, Uuid } from "../../../../../shared/domain/value-objects/uui.vo";
 import { Category } from "../../../../domain/category.entity";
 import { CategoryInMemoryRepository } from "../../../../infra/db/in-memory/category-in-memory.repository";
-import { UpdateCategoryUseCase } from "../../update-category.use-case";
+import { UpdateCategoryInput } from "../update-category-input";
+import { UpdateCategoryUseCase } from "../update-category.use-case";
 
 
 
@@ -18,14 +19,17 @@ describe("UpdateCategoryUseCase Unit Tests", () => {
 
 
     it("shold throw error when entity not found", async () => {
+        let input = new UpdateCategoryInput({ id: "fake uuid" })
         await expect(() =>
-            useCase.execute({ id: "fake id" })
-        ).rejects.toThrow("Invalid UUID: fake id");
+            useCase.execute(input)
+        ).rejects.toThrow("Invalid UUID: fake uuid");
 
         const uuid = new Uuid();
 
+        input = new UpdateCategoryInput({ id: uuid.id, name: "test" })
+
         await expect(() =>
-            useCase.execute({ id: uuid.id, name: "test" })
+            useCase.execute(input)
         ).rejects.toThrow(new NotFoundError(uuid.id, Category));
 
     });
@@ -34,8 +38,10 @@ describe("UpdateCategoryUseCase Unit Tests", () => {
         const aggregate = new Category({ name: "Movie" })
         repository.items = [aggregate];
 
+        let input = new UpdateCategoryInput({ id: aggregate.category_id.id, name: "test".repeat(256) })
+
         await expect(() =>
-            useCase.execute({ id: aggregate.category_id.id, name: "test".repeat(256) })
+            useCase.execute(input)
         ).rejects.toThrow('Entity Validation Error');
 
     });
@@ -44,7 +50,8 @@ describe("UpdateCategoryUseCase Unit Tests", () => {
         const spyUpdate = jest.spyOn(repository, "update");
         const entity = Category.fake().aCategory().withName("test").build();
         repository.items = [entity];
-        let output = await useCase.execute({ id: entity.category_id.id, name: "testUpdate" });
+        let input = new UpdateCategoryInput({ id: entity.category_id.id, name: "testUpdate" })
+        let output = await useCase.execute(input);
         expect(spyUpdate).toHaveBeenCalledTimes(1);
         expect(output).toStrictEqual({
             id: repository.items[0].category_id.id,

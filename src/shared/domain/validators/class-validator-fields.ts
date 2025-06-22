@@ -3,10 +3,7 @@ import { FieldsErrors, IValidatorFields } from "./validator-fields.interface";
 import { Notification } from "./notification";
 
 
-export abstract class ClassValidatorFields<PropsValidated> implements IValidatorFields<PropsValidated> {
-
-    errors: FieldsErrors | null = null;
-    validatedData: PropsValidated | null = null;
+export abstract class ClassValidatorFields<PropsValidated> implements IValidatorFields {
 
     validate(notifications: Notification, data: any, fields: string[]): boolean {
         const errors = validateSync(data, {

@@ -1,89 +1,26 @@
 
 
-
-//Tem que testar o toOutpput 
-//Tem que testar o execute
-//Teste por nome, teste por data
-
+import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
 import { Category } from "../../../../domain/category.entity";
-import { CategorySearchParams, CategorySearchResult } from "../../../../domain/category.repository";
-import { CategoryInMemoryRepository } from "../../../../infra/db/in-memory/category-in-memory.repository";
+import { CategorySearchParams } from "../../../../domain/category.repository";
+import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
+import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category.sequelize.repository";
 import { CategoryOutputMapper } from "../../common/category-output";
-import { ListCategoriesUseCase } from "../../list-categories.use-case";
+import { ListCategoriesUseCase } from "../list-categories.use-case";
 
 //Teste sem parametro 
-describe('ListCategoriesUseCase Unit Tests', () => {
+describe('ListCategoriesUseCase Integration Tests', () => {
+
+    setupSequelize({ models: [CategoryModel] })
 
     let useCase: ListCategoriesUseCase;
-    let repository: CategoryInMemoryRepository;
+    let repository: CategorySequelizeRepository;
 
     beforeEach(() => {
-        repository = new CategoryInMemoryRepository();
+        repository = new CategorySequelizeRepository(CategoryModel);
         useCase = new ListCategoriesUseCase(repository);
     });
 
-    it("Should test output method", async () => {
-
-        let result = new CategorySearchResult({
-            items: [],
-            current_page: 0,
-            total: 0,
-            per_page: 1,
-        });
-
-        const output = useCase["toOutput"](result);
-
-        expect(output).toStrictEqual({
-            items: [],
-            current_page: 0,
-            per_page: 1, //E 1 pq o Match.ceil ele arredonda pra cima
-            total: 0,
-            last_page: 0
-        })
-
-        const entity = Category.fake().aCategory().withName("Movie").build();
-        const entity2 = Category.fake().aCategory().withName("Movie2").build();
-        const entity3 = Category.fake().aCategory().withName("Movie3").build();
-
-        result = new CategorySearchResult({
-            items: [entity],
-            current_page: 1,
-            total: 1,
-            per_page: 1,
-        });
-
-        const output2 = useCase["toOutput"](result);
-
-
-        expect(output2).toStrictEqual({
-            items: [entity].map(CategoryOutputMapper.toOutput),
-            current_page: 1,
-            per_page: 1,
-            total: 1,
-            last_page: 1
-        });
-
-        result = new CategorySearchResult({
-            items: [entity, entity2, entity3],
-            current_page: 1,
-            total: 1,
-            per_page: 1,
-        });
-
-        const output3 = useCase["toOutput"](result);
-
-        expect(output3).toStrictEqual({
-            items: [entity, entity2, entity3].map(CategoryOutputMapper.toOutput),
-            current_page: 1,
-            per_page: 1,
-            total: 1,
-            last_page: 1
-        });
-
-
-
-
-    });
 
     //Desc sera sempre do menor para o maior
     let entity1 = Category.fake().aCategory().withName('test 1').withDescription("").build();
@@ -94,10 +31,11 @@ describe('ListCategoriesUseCase Unit Tests', () => {
     const items = [entity1, entity2, entity3, entity4, entity5];
 
     it("Should return output sorted by created_at when input param is empty", async () => {
-        repository.items = items;
+        await repository.bulkInsert(items);
+
         let outPut = await useCase.execute({})
         expect(outPut).toStrictEqual({
-            items: [...repository.items].reverse().map(CategoryOutputMapper.toOutput),
+            items: [...items].reverse().map(CategoryOutputMapper.toOutput),
             current_page: 1,
             per_page: 15,
             total: 5,
@@ -106,14 +44,15 @@ describe('ListCategoriesUseCase Unit Tests', () => {
     });
 
     it("should return outPut sorted creted_at asc, when params is not by created_at asc", async () => {
-        repository.items = items;
+        await repository.bulkInsert(items);
+
         let input = new CategorySearchParams({
             sort: "created_at",
             sort_dir: "asc"
         });
         const outPut = await useCase.execute(input);
         expect(outPut).toStrictEqual({
-            items: [...repository.items].map(CategoryOutputMapper.toOutput),
+            items: [...items].map(CategoryOutputMapper.toOutput),
             current_page: 1,
             per_page: 15,
             total: 5,
@@ -122,7 +61,8 @@ describe('ListCategoriesUseCase Unit Tests', () => {
     });
 
     it("should return outPut filter by name and created_at by desc", async () => {
-        repository.items = items;
+        await repository.bulkInsert(items);
+
         let input = new CategorySearchParams({
             // sort: "created_at",
             // sort_dir: "asc",
@@ -130,7 +70,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
         });
         const outPut = await useCase.execute(input);
         expect(outPut).toStrictEqual({
-            items: [...repository.items].slice(2, 5).reverse().map(CategoryOutputMapper.toOutput),
+            items: [...items].slice(2, 5).reverse().map(CategoryOutputMapper.toOutput),
             current_page: 1,
             per_page: 15,
             total: 3,
@@ -139,7 +79,8 @@ describe('ListCategoriesUseCase Unit Tests', () => {
     });
 
     it("should return outPut filter by name and created_at by asc", async () => {
-        repository.items = items;
+        await repository.bulkInsert(items);
+
         let input = new CategorySearchParams({
             sort: "created_at",
             sort_dir: "asc",
@@ -147,7 +88,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
         });
         const outPut = await useCase.execute(input);
         expect(outPut).toStrictEqual({
-            items: [...repository.items].slice(2, 5).map(CategoryOutputMapper.toOutput),
+            items: [...items].slice(2, 5).map(CategoryOutputMapper.toOutput),
             current_page: 1,
             per_page: 15,
             total: 3,

@@ -4,7 +4,8 @@ import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
 import { Category } from "../../../../domain/category.entity";
 import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
 import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category.sequelize.repository";
-import { UpdateCategoryUseCase } from "../../update-category.use-case";
+import { UpdateCategoryInput } from "../update-category-input";
+import { UpdateCategoryUseCase } from "../update-category.use-case";
 
 
 
@@ -23,9 +24,10 @@ describe("UpdateCategoryUseCase Integration Tests", () => {
     it("shold throw error when entity not found", async () => {
 
         const uuid = new Uuid();
+        let input = new UpdateCategoryInput({ id: uuid.id, name: "test" })
 
         await expect(() =>
-            useCase.execute({ id: uuid.id, name: "test" })
+            useCase.execute(input)
         ).rejects.toThrow(new NotFoundError(uuid.id, Category));
 
     });
@@ -35,9 +37,10 @@ describe("UpdateCategoryUseCase Integration Tests", () => {
         const entity = Category.fake().aCategory().withName("test").build();
 
         repository.insert(entity);
+        let input = new UpdateCategoryInput({ id: entity.category_id.id, name: "testUpdate" })
 
 
-        let output = await useCase.execute({ id: entity.category_id.id, name: "testUpdate" });
+        let output = await useCase.execute(input);
         expect(spyUpdate).toHaveBeenCalledTimes(1);
         const expectedFind = await repository.findById(entity.category_id);
         expect(expectedFind).toBeDefined();
