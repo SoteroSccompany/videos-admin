@@ -23,7 +23,7 @@ export class Config {
         //Cria dentro da classe config todas as configuracaoes da classe Config.
         //Assim fica todas as coisas que estao dentro do arquivo aqui dentro da classe
         Config.env = readEnv({
-            path: join(__dirname, `../../../envs/.env.${process.env.NODE_ENV}`),
+            path: join(__dirname, `../../../../envs/.env.${process.env.NODE_ENV}`),
         }).parsed;
     }
 

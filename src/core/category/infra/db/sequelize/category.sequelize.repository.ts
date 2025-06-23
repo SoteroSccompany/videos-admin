@@ -8,7 +8,7 @@ import { CategorySearchParams, CategorySearchResult, ICategoryRepository } from 
 import { CategoryModel } from "./category.model";
 import { Op } from "sequelize";
 import { CategoryModelMapper } from "./category-model-mapper";
-
+import { Injectable } from "@nestjs/common";
 
 
 
