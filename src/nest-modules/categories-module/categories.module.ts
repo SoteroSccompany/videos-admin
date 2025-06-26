@@ -5,29 +5,15 @@ import { SequelizeModule, getModelToken } from '@nestjs/sequelize';
 import { CategorySequelizeRepository } from '@core/category/infra/db/sequelize/category.sequelize.repository';
 import { CreateCategoryUseCase } from '@core/category/application/use-case/create-category/create-category.use-case';
 import { ICategoryRepository } from '@core/category/domain/category.repository';
+import { CATEGORY_PROVIDERS } from './categories.providers';
 
+//Realizar a utilizacao do modulo para que seja utilizado no controller e realizar o post e o update
 @Module({
   imports: [SequelizeModule.forFeature([CategoryModel])],
   controllers: [CategoriesController],
   providers: [
-    {
-      provide: CategorySequelizeRepository,
-      useFactory: (categoryModel: typeof CategoryModel) => {
-        return new CategorySequelizeRepository(categoryModel);
-      },
-      inject: [getModelToken(CategoryModel)], //Pegar o nome da referencia em relacao a conexao com o banco de dados
-    },
-    {
-      provide: CreateCategoryUseCase,
-      useFactory: (categoryRepo: ICategoryRepository) =>
-        new CreateCategoryUseCase(categoryRepo),
-      inject: [CategorySequelizeRepository]
-    }
+    ...Object.values(CATEGORY_PROVIDERS.REPOSITORIES),
+    ...Object.values(CATEGORY_PROVIDERS.USE_CASES)
   ],
 })
-export class CategoriesModule {
-
-  async xpto() {
-
-  }
-}
+export class CategoriesModule { }
