@@ -7,8 +7,7 @@ import { UpdateCategoryUseCase } from '@core/category/application/use-case/updat
 import { DeleteCategoryUseCase } from '@core/category/application/use-case/delete-category/delete-category.use-case';
 import { GetCategoryUseCase } from '@core/category/application/use-case/get-category/get-category.use-case';
 import { ListCategoriesUseCase, ListCategoryUseCaseInput } from '@core/category/application/use-case/list-categories/list-categories.use-case';
-import { CreateCategoryInput } from '@core/category/application/use-case/create-category/create-category-input';
-import { CategoryPresenter } from './category-presenter';
+import { CategoryCollectionPresenter, CategoryPresenter } from './category-presenter';
 import { CategoryOutput } from '@core/category/application/use-case/common/category-output';
 import { SearchCategoriesDto } from './dto/search-categories.dto';
 
@@ -41,6 +40,7 @@ export class CategoriesController {
     @Query() searchParamsDto: SearchCategoriesDto
   ) {
     const output = await this.listUseCase.execute(searchParamsDto);
+    return new CategoryCollectionPresenter(output);
 
   }
 
