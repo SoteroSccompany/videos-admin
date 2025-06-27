@@ -32,7 +32,7 @@ export type ListCategoryUseCaseInput = {
     per_page?: number;
     sort?: string | null;
     sort_dir?: SortDirection | null;
-    filter?: CategoryFilter;
+    filter?: CategoryFilter | null;
 };
 
 export type ListCategoryUseCaseOutput = PaginationOutPut<CategoryOutput>;
