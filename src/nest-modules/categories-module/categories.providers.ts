@@ -11,9 +11,27 @@ import { getModelToken } from "@nestjs/sequelize";
 
 
 
+// beforeEach(async () => {
+//   const module: TestingModule = await Test.createTestingModule({
+//     imports: [
+//       ConfigModule.forRoot({}),
+//       // DatabaseModule,
+//       CategoriesModule, //Registra o model no sequelize
+//     ], //Pode ser passado dessa forma
+//   })
+//     .overrideProvider(getModelToken(CategoryModel))//Para sobrescrever algum provider, se necessário
+//     .useValue({})
+//     .overrideProvider('CategoryRepository')
+//     .useValue(CategoryInMemoryRepository) //Aqui garante que sera utilizado o outro repositorio
+//     .compile();
+
+//   controller = module.get<CategoriesController>(CategoriesController);
+//   // console.log(module.get(ConfigService).get("DB_HOST"));
+// });
+
 export const REPOSITORIES = {
     CATEGORY_REPOSITORY: {
-        provide: 'CategoryRepository',
+        provide: 'CategoryRepository', //Esse aqui sempre edeixa como o sequelize, caso queira no teste trocar, se utiliza o comentario acima de exemplo
         useExisting: CategorySequelizeRepository
     },
     CATEGORY_IN_MEMORY_REPOSITORIY: {
@@ -36,35 +54,35 @@ export const USE_CASES = {
         useFactory: (categoryRepository: ICategoryRepository) => {
             return new CreateCategoryUseCase(categoryRepository)
         },
-        Inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
+        inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
     },
     UPDATE_CATEGORY: {
         provide: UpdateCategoryUseCase,
         useFactory: (categoryRepository: ICategoryRepository) => {
             return new UpdateCategoryUseCase(categoryRepository)
         },
-        Inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
+        inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
     },
     DELETE_CATEGORY: {
         provide: DeleteCategoryUseCase,
         useFactory: (categoryRepository: ICategoryRepository) => {
             return new DeleteCategoryUseCase(categoryRepository)
         },
-        Inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
+        inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
     },
     GET_CATEGORY: {
         provide: GetCategoryUseCase,
         useFactory: (categoryRepository: ICategoryRepository) => {
             return new GetCategoryUseCase(categoryRepository)
         },
-        Inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
+        inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
     },
     LIST_CATEGORY: {
         provide: ListCategoriesUseCase,
         useFactory: (categoryRepository: ICategoryRepository) => {
             return new ListCategoriesUseCase(categoryRepository)
         },
-        Inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
+        inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide]
     }
 
 }

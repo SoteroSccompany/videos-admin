@@ -1,13 +1,12 @@
 
-import { CategoriesController } from './categories.controller';
+import { CategoriesController } from '../categories.controller';
 import { CreateCategoryUseCaseOutput } from '@core/category/application/use-case/create-category/create-category.use-case';
-import { CategoryCollectionPresenter, CategoryPresenter } from './category-presenter';
-import { CreateCategoryInput } from '@core/category/application/use-case/create-category/create-category-input';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { SearchCategoriesDto } from './dto/search-categories.dto';
+import { CategoryCollectionPresenter, CategoryPresenter } from '../category-presenter';
+import { CreateCategoryDto } from '../dto/create-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { SearchCategoriesDto } from '../dto/search-categories.dto';
 import { instanceToPlain } from 'class-transformer';
-import { PaginationPresenter } from '../shared-module/pagination.presenter';
+import { PaginationPresenter } from '../../shared-module/pagination.presenter';
 
 // beforeEach(async () => {
 //   const module: TestingModule = await Test.createTestingModule({

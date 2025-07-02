@@ -2,7 +2,6 @@ import { CategoryOutput } from "@core/category/application/use-case/common/categ
 import { ListCategoryUseCaseInput, ListCategoryUseCaseOutput } from "@core/category/application/use-case/list-categories/list-categories.use-case";
 import { Transform } from "class-transformer";
 import { CollectionPresenter } from "../shared-module/collection.presenter";
-import { PaginationPresenterProps } from "../shared-module/pagination.presenter";
 
 
 
