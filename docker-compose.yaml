@@ -11,10 +11,11 @@ services:
 
   db:
     image: mysql:8.0.30-debian
+    platform: linux/amd64
     environment:
       - MYSQL_DATABASE=micro_videos
       - MYSQL_ROOT_PASSWORD=root
-    # volumes: 
+    # volumes:
     #   - ./.docker/mysql:/docker-entrypoint-initdb.d
     tmpfs:
       - /var/lib/mysql

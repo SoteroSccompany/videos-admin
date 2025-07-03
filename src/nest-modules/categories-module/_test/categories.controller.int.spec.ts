@@ -11,10 +11,10 @@ import { UpdateCategoryUseCase } from '@core/category/application/use-case/updat
 import { ListCategoriesUseCase } from '@core/category/application/use-case/list-categories/list-categories.use-case';
 import { GetCategoryUseCase } from '@core/category/application/use-case/get-category/get-category.use-case';
 import { DeleteCategoryUseCase } from '@core/category/application/use-case/delete-category/delete-category.use-case';
-import { CreateCategoryFixture, UpdateCategoryFixture } from '../testing/category.fixture';
+import { CreateCategoryFixture, ListCategoriesFixture, UpdateCategoryFixture } from '../testing/category.fixture';
 import { Uuid } from '@core/shared/domain/value-objects/uui.vo';
 import { CategoryOutputMapper } from '@core/category/application/use-case/common/category-output';
-import { CategoryPresenter } from '../category-presenter';
+import { CategoryCollectionPresenter, CategoryPresenter } from '../category-presenter';
 import { Category } from '@core/category/domain/category.entity';
 
 describe('CategoriesController Integration Tests', () => {
@@ -62,6 +62,7 @@ describe('CategoriesController Integration Tests', () => {
         });
         const output = CategoryOutputMapper.toOutput(entity);
         expect(presenter).toEqual(new CategoryPresenter(output));
+        await repository.delete(entity.category_id);
       }
     );
 
@@ -80,7 +81,7 @@ describe('CategoriesController Integration Tests', () => {
       await repository.delete(category.category_id);
     });
 
-    it.each(arrange)(
+    it.each(arrange)( //Aqui já vem inserido dentro do banco um dado, na fixture, ele tem outro que vai servir de comparacao.
       'when body is $send_data',
       async ({ send_data, expected }) => {
         const presenter = await controller.update(
@@ -129,8 +130,64 @@ describe('CategoriesController Integration Tests', () => {
     expect(presenter.created_at).toStrictEqual(category.created_at);
   });
 
-  //PArou na aula em -07:04 -> faltando o metodo de busca 
 
+  describe('search methods', () => { //Aqui segue sendo o mesma lógica do update, se tem as entidades, com os arranges 
+    //que estarao dentro da fixture, se consegue realizar o test.each e realizar os testes
+
+    describe('should sorted categories by created_at', () => {
+
+      const { entitiesMap, arrange } = ListCategoriesFixture.arrangeIncrementedWithCreatedAt();
+
+      beforeEach(async () => {
+        await repository.bulkInsert(Object.values(entitiesMap));
+      });
+
+      afterEach(async () => {
+        for await (const entity of Object.values(entitiesMap)) {
+          await repository.delete(entity.category_id);
+        }
+      });
+
+      test.each(arrange)('when send_data is $send_data',
+        async ({ send_data, expected }) => {
+          const presenter = await controller.search(send_data);
+          const { entities, ...paginationProps } = expected;
+          expect(presenter).toEqual(
+            new CategoryCollectionPresenter({
+              items: entities.map(CategoryOutputMapper.toOutput), //Quando coloca apenas a funcao assim ele ja entende que todos devem entrar dentro dessa funcao
+              ...paginationProps.meta
+            })
+          );
+        });
+
+
+    });
+
+    describe('should return categories using pagination, sort and filter', () => {
+
+      const { entitiesMap, arrange } = ListCategoriesFixture.arrangeUnsorted();
+
+      beforeEach(async () => {
+        await repository.bulkInsert(Object.values(entitiesMap));
+      });
+
+      it.each(arrange)('when send_data is $send_data',
+        async ({ send_data, expected }) => {
+          const presenter = await controller.search(send_data);
+          const { entities, ...paginationProps } = expected;
+          expect(presenter).toEqual(
+            new CategoryCollectionPresenter({
+              items: entities.map(CategoryOutputMapper.toOutput), //Quando coloca apenas a funcao assim ele ja entende que todos devem entrar dentro dessa funcao
+              ...paginationProps.meta
+            })
+          )
+        });
+
+
+    });
+
+
+  });
 
 
 

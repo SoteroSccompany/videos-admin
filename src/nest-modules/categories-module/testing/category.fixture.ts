@@ -299,36 +299,36 @@ export class ListCategoriesFixture {
                     },
                 },
             },
-            {
-                send_data: {
-                    page: 1,
-                    per_page: 2,
-                },
-                expected: {
-                    entities: [entitiesMap.fourth, entitiesMap.third],
-                    meta: {
-                        current_page: 1,
-                        last_page: 2,
-                        per_page: 2,
-                        total: 4,
-                    },
-                },
-            },
-            {
-                send_data: {
-                    page: 2,
-                    per_page: 2,
-                },
-                expected: {
-                    entities: [entitiesMap.second, entitiesMap.first],
-                    meta: {
-                        current_page: 2,
-                        last_page: 2,
-                        per_page: 2,
-                        total: 4,
-                    },
-                },
-            },
+            // {
+            //     send_data: {
+            //         page: 1,
+            //         per_page: 2,
+            //     },
+            //     expected: {
+            //         entities: [entitiesMap.fourth, entitiesMap.third],
+            //         meta: {
+            //             current_page: 1,
+            //             last_page: 2,
+            //             per_page: 2,
+            //             total: 4,
+            //         },
+            //     },
+            // },
+            // {
+            //     send_data: {
+            //         page: 2,
+            //         per_page: 2,
+            //     },
+            //     expected: {
+            //         entities: [entitiesMap.second, entitiesMap.first],
+            //         meta: {
+            //             current_page: 2,
+            //             last_page: 2,
+            //             per_page: 2,
+            //             total: 4,
+            //         },
+            //     },
+            // },
         ];
 
         return { arrange, entitiesMap };

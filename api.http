@@ -1,0 +1,17 @@
+### Create Categpry 
+
+POST  http://localhost:3000/categories
+Content-Type: application/json
+
+{
+    "name": "New Category",
+    "description": "This is a new category for testing purposes."
+}
+
+
+### Get All Categories
+GET  http://localhost:3000/categories
+
+### 
+
+GET http://localhost:3000/categories/1f8d4c2e-3b2a-4c5b-9f8d-4c2e3b2a4c5b
