@@ -3,6 +3,7 @@ import { Uuid } from "../../../../shared/domain/value-objects/uui.vo";
 import { Category } from "../../../domain/category.entity";
 import { CategoryModel } from "./category.model";
 import { EntityValidationError } from "../../../../shared/domain/validators/validation.errors";
+import { Entity } from "@core/shared/domain/entity";
 
 
 
@@ -28,6 +29,7 @@ export class CategoryModelMapper {
         });
         category.validate();
         if (category.notification.hasError()) {//Assim permite que se tenha mais controle e dentro do caso de uso em si vai ter isso. 
+            console.log(model)
             throw new EntityValidationError(category.notification.toJson());
         }
 

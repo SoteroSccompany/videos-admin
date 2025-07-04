@@ -91,7 +91,7 @@ export class CreateCategoryFixture {
             EMPTY: {
                 send_data: {},
                 expected: {
-                    message: ['name should not be empty', 'name must be a string'],
+                    message: ['name must be a string', 'name should not be empty'],
                     ...defaultExpected,
                 },
             },
@@ -100,7 +100,7 @@ export class CreateCategoryFixture {
                     name: undefined,
                 },
                 expected: {
-                    message: ['name should not be empty', 'name must be a string'],
+                    message: ['name must be a string', 'name should not be empty'],
                     ...defaultExpected,
                 },
             },
@@ -109,7 +109,7 @@ export class CreateCategoryFixture {
                     name: null,
                 },
                 expected: {
-                    message: ['name should not be empty', 'name must be a string'],
+                    message: ['name must be a string', 'name should not be empty'],
                     ...defaultExpected,
                 },
             },
@@ -128,8 +128,8 @@ export class CreateCategoryFixture {
                 },
                 expected: {
                     message: [
-                        'name should not be empty',
                         'name must be a string',
+                        'name should not be empty',
                         'description must be a string',
                     ],
                     ...defaultExpected,
@@ -141,8 +141,8 @@ export class CreateCategoryFixture {
                 },
                 expected: {
                     message: [
-                        'name should not be empty',
                         'name must be a string',
+                        'name should not be empty',
                         'is_active must be a boolean value',
                     ],
                     ...defaultExpected,
