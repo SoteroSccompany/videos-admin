@@ -21,6 +21,7 @@
       "@core/*": [
         "./src/core/*"
       ]
-    }
+    },
+    "esModuleInterop": true
   }
 }

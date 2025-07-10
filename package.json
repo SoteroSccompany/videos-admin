@@ -13,6 +13,8 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "migrate:ts": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/migrate.ts",
+    "migrate:js": "node -r ./dist/migrate.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -41,6 +43,7 @@
     "rxjs": "^7.8.1",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
+    "umzug": "^3.8.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

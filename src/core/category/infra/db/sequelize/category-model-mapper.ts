@@ -29,7 +29,6 @@ export class CategoryModelMapper {
         });
         category.validate();
         if (category.notification.hasError()) {//Assim permite que se tenha mais controle e dentro do caso de uso em si vai ter isso. 
-            console.log(model)
             throw new EntityValidationError(category.notification.toJson());
         }
 

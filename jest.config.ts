@@ -194,27 +194,29 @@ const config: Config = {
   transform: {
     "^.+\\.(t|j)s$": "@swc/jest"
   },
-  collectCoverageFrom: [
-    "**/*.(t|j)s"
-  ],
-  coverageDirectory: "../coverage",
   testEnvironment: "node",
   setupFilesAfterEnv: [
     './core/shared/infra/testing/expect-helpers.ts'
   ],
   clearMocks: true,
+  collectCoverageFrom: [
+    "**/*.(t|j)s"
+  ],
+  coverageDirectory: "../coverage",
   collectCoverage: true,
   coveragePathIgnorePatterns: [
-    "/node_modules/",
-    "./src/shared/infra/testing/helpers.ts"
+    '/node_modules/',
+    '.interface.ts',
+    'shared/testing',
+    'shared-module/testing',
+    'validator-rules.ts',
+    '-fixture.ts',
+    '.fixture.ts',
+    'global.config.ts',
+    'shared.module.ts',
+    'jest.d.ts'
   ],
   coverageProvider: "v8",
-  coverageReporters: [
-    "json",
-    "text"
-    // "lcov",
-    // "clover"
-  ],
   coverageThreshold: {
     global: {
       branches: 80,
