@@ -35,5 +35,9 @@ export class SearchResult<E extends Entity> extends ValueObject {
         }
     }
 
+    toString() {
+
+    }
+
 
 }

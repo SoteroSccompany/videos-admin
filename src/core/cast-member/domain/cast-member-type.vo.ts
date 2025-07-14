@@ -9,25 +9,29 @@ export enum CastMemberName {
 
 export class CastMemberType extends ValueObject {
 
-    readonly cast_member_type: number;
+    readonly _cast_member_type: number;
     private cast_member_name: string;
 
 
     constructor(type: number) {
         super()
-        this.cast_member_type = type;
+        this._cast_member_type = type;
         this.validate();
     }
 
     private validate() {
-        if (this.cast_member_type !== 1 && this.cast_member_type !== 2) {
+        if (this._cast_member_type !== 1 && this._cast_member_type !== 2) {
             throw new InvalidCastMemberTypeError(`Ivalid cast member type. Allowed values are 1 or 2`);
         }
-        this.cast_member_name = CastMemberName[this.cast_member_type as CastMemberName]
+        this.cast_member_name = CastMemberName[this._cast_member_type as CastMemberName]
     }
 
     toString() {
-        return `${this.cast_member_type}_${this.cast_member_name}`
+        return `${this._cast_member_type}_${this.cast_member_name}`
+    }
+
+    get cast_member_type() {
+        return this._cast_member_type;
     }
 
 }

@@ -85,6 +85,10 @@ export class SearchParams<Filter = string> extends ValueObject {
                 null : (`${value}` as any);
     }
 
+    toString() {
+
+    }
+
 
 
 

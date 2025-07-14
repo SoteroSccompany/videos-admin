@@ -33,4 +33,13 @@ describe("CastMemberType", () => {
         expect(string).toEqual('2_Director')
     });
 
+    it("should return a type of castmember", () => {
+        const spyValidate = jest.spyOn(CastMemberType.prototype as any, "validate")
+        const castMemberType = new CastMemberType(2)
+        expect(castMemberType).toBeInstanceOf(CastMemberType);
+        expect(spyValidate).toHaveBeenCalled();
+        expect(castMemberType.cast_member_type).toBe(2);
+
+    });
+
 })

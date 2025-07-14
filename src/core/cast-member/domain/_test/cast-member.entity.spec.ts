@@ -134,4 +134,16 @@ describe("CastMember entity test", () => {
 
     });
 
+    it("shoul return cast member in json", () => {
+        let cast_member_type = new CastMemberType(1);
+        const castMember = CastMember.create({ cast_member_type, name: "G" })
+        expect(castMember).toBeInstanceOf(CastMember);
+        const jsonCastMember = castMember.toJson();
+        expect(jsonCastMember.cast_member_id).toBe(castMember.cast_member_id.id);
+        expect(jsonCastMember.cast_member_type).toBe(castMember.cast_member_type.toString())
+        expect(jsonCastMember.created_at).toBe(castMember.created_at)
+        expect(jsonCastMember.name).toBe(castMember.name)
+
+    })
+
 })

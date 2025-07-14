@@ -2,6 +2,7 @@ import { Entity } from "@core/shared/domain/entity";
 import { Uuid } from "@core/shared/domain/value-objects/uui.vo";
 import { CastMemberType } from "./cast-member-type.vo";
 import { CastMemberValidatorFactory } from "./cast-member.validator";
+import { CastMemberFakeBuilder } from "./cast-member.fake.builder";
 
 
 export type CastMemberConstructorProps = {
@@ -66,6 +67,10 @@ export class CastMember extends Entity {
     validate(fields?: string[]) {
         const validate = CastMemberValidatorFactory.create();
         return validate.validate(this.notification, this, fields)
+    }
+
+    static fake() {
+        return CastMemberFakeBuilder;
     }
 
 
