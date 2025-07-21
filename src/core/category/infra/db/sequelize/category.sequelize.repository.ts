@@ -1,14 +1,11 @@
-import { idText } from "typescript";
 import { NotFoundError } from "../../../../shared/domain/error/not-found.error";
-import { SearchParams, SortDirection } from "../../../../shared/domain/repository/search-params";
-import { SearchResult } from "../../../../shared/domain/repository/search-result";
+import { SortDirection } from "../../../../shared/domain/repository/search-params";
 import { Uuid } from "../../../../shared/domain/value-objects/uui.vo";
 import { Category } from "../../../domain/category.entity";
 import { CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../../domain/category.repository";
 import { CategoryModel } from "./category.model";
 import { literal, Op } from "sequelize";
 import { CategoryModelMapper } from "./category-model-mapper";
-import { Injectable } from "@nestjs/common";
 
 
 

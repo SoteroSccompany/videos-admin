@@ -11,7 +11,7 @@ export class CastMemberFakeBuilder<TBuild = any> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private _name: PropOrFactory<string> = (_index) => this.chance.word();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    private _cast_member_type: PropOrFactory<CastMemberType | null> = (_index) => new CastMemberType(this.chance.integer({ min: 1, max: 2 }));
+    private _cast_member_type: PropOrFactory<CastMemberType> = (_index) => new CastMemberType(this.chance.integer({ min: 1, max: 2 }));
     // auto generated in entity
     private _created_at: PropOrFactory<Date> | undefined = undefined;
 
@@ -46,7 +46,7 @@ export class CastMemberFakeBuilder<TBuild = any> {
         return this;
     }
 
-    withCastMemberType(valueOrFactory: PropOrFactory<CastMemberType | null>) {
+    withCastMemberType(valueOrFactory: PropOrFactory<CastMemberType>) {
         this._cast_member_type = valueOrFactory;
         return this;
     }
@@ -72,7 +72,7 @@ export class CastMemberFakeBuilder<TBuild = any> {
     }
 
     build(): TBuild {
-        const categories = new Array(this.countObjs)
+        const cast_members = new Array(this.countObjs)
             .fill(undefined)
             .map((_, index) => {
                 const cast_member = new CastMember({
@@ -87,7 +87,7 @@ export class CastMemberFakeBuilder<TBuild = any> {
                 return cast_member;
             });
         //@ts-ignore
-        return this.countObjs === 1 ? (categories[0] as any) : categories;
+        return this.countObjs === 1 ? (cast_members[0] as any) : cast_members;
     }
 
     get cast_member_id() {

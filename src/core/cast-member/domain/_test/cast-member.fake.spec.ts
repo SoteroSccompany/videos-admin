@@ -108,24 +108,27 @@ describe('CastMemberFakeBuilder Unit Test', () => {
         });
 
         it("withCastMemberType", () => {
-            const cast_member_type = new CastMemberType(2);
-            const $this = faker.withCastMemberType(cast_member_type)
+            const cast_member_type = 2;
+            const $this = faker.withCastMemberType(cast_member_type as any);
             expect($this).toBeInstanceOf(CastMemberFakeBuilder);
             expect($this.cast_member_type).toBe(cast_member_type);
-            faker.withCastMemberType(() => cast_member_type)
+            expect(faker['_cast_member_type']).toBe(cast_member_type);
             expect($this.cast_member_type).toBe(cast_member_type)
+            const fk = faker.build();
+            expect(fk.cast_member_type).toBeInstanceOf(CastMemberType);
         });
 
         it("should pass castMemberFactory", () => {
-            const castMemberType = new CastMemberType(1);
-            const mockFunction = jest.fn(() => castMemberType);
+            const castMemberType = 1;
+            const mockFunction = jest.fn(() => new CastMemberType(castMemberType));
             faker.withCastMemberType(mockFunction)
             faker.build();
             expect(mockFunction).toHaveBeenCalledTimes(1)
             const fakeMany = CastMemberFakeBuilder.theCastMembers(2).withCastMemberType(mockFunction).build();
             expect(mockFunction).toHaveBeenCalledTimes(3)
-            expect(fakeMany[0].cast_member_type).toBe(castMemberType)
-            expect(fakeMany[1].cast_member_type).toBe(castMemberType)
+            expect(fakeMany[0].cast_member_type).toBeInstanceOf(CastMemberType);
+            expect(fakeMany[0].cast_member_type.cast_member_type).toBe(castMemberType)
+            expect(fakeMany[1].cast_member_type.cast_member_type).toBe(castMemberType)
 
         });
     })
