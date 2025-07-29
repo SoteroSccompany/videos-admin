@@ -38,7 +38,7 @@ describe("CastMember entity test", () => {
     });
 
     describe("create command", () => {
-        let cast_member_type = new CastMemberType(1);
+        let cast_member_type = 1;
         let name = "Teste"
 
         it('should create cast member', () => {
@@ -51,6 +51,7 @@ describe("CastMember entity test", () => {
         });
 
         describe('cast_member_id', () => {
+            let cast_member_type = new CastMemberType(1);
             const arrange = [
                 { cast_member_id: undefined }, { cast_member_id: null }, { cast_member_id: new Uuid }
             ]
@@ -109,8 +110,9 @@ describe("CastMember entity test", () => {
 
     describe("CastMemberValidator", () => {
 
-        let cast_member_type = new CastMemberType(1);
+        let cast_member_type = 1;
         it('should throw error when name is to loog', () => {
+
             const castMember = CastMember.create({ cast_member_type, name: "G".repeat(280) })
             expect(castMember.notification.hasError()).toBeTruthy();
             expect(castMember.notification).notificationContainsErrorMessage([
@@ -135,7 +137,7 @@ describe("CastMember entity test", () => {
     });
 
     it("shoul return cast member in json", () => {
-        let cast_member_type = new CastMemberType(1);
+        let cast_member_type = 1;
         const castMember = CastMember.create({ cast_member_type, name: "G" })
         expect(castMember).toBeInstanceOf(CastMember);
         const jsonCastMember = castMember.toJson();

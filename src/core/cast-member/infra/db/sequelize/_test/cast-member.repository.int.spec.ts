@@ -4,8 +4,8 @@ import { CastMemberModel } from "../cast-member.model";
 import { CastMember } from "@core/cast-member/domain/cast-member.entity";
 import { NotFoundError } from "@core/shared/domain/error/not-found.error";
 import { CastMemberType } from "@core/cast-member/domain/cast-member-type.vo";
-import { CastMemberSearchParams } from "@core/cast-member/domain/cast-member.repository";
-
+import { CastMemberSearchParams, CastMemberSearchResult } from "@core/cast-member/domain/cast-member.repository";
+import omit from "lodash/omit";
 
 
 
@@ -112,34 +112,199 @@ describe('CastMemberRepository Integration Tests', () => {
     });
 
 
-    // describe("search method", () => {
+    describe("search method", () => {
 
-    //     it("should only apply pagination when no filters are provided", async () => {
-    //         const created_at = new Date();
-    //         const name = "Cast Member";
-    //         const cast_member_type = new CastMemberType(1);
-    //         const entities = CastMember.fake()
-    //             .theCastMembers(3)
-    //             .withName(name)
-    //             .withCastMemberType(cast_member_type)
-    //             .withCreatedAt(created_at)
-    //             .build();
+        it("should only apply pagination when no filters are provided", async () => {
+            const created_at = new Date();
+            const name = "Cast Member";
+            const cast_member_type = new CastMemberType(2);
+            const entities = CastMember.fake()
+                .theCastMembers(3)
+                .withName(name)
+                .withCastMemberType(cast_member_type)
+                .withCreatedAt(created_at)
+                .build();
 
-    //         await repository.bulkInsert(entities);
-    //         expect(true).toBeTruthy(); // Placeholder for actual search test
-    //         const searchParams = new CastMemberSearchParams();
-    //         const result = await repository.search(searchParams);
-    //         expect(result.items.length).toBe(3);
-    //         expect(result).toMatchObject({
-    //             items: entities,
-    //             total: 3,
-    //             current_page: 1,
-    //             per_page: 15,
-    //             last_page: 1,
-    //         });
+            await repository.bulkInsert(entities);
+            const searchParams = new CastMemberSearchParams();
+            const result = await repository.search(searchParams);
+            expect(result.items.length).toBe(3);
+            expect(result).toMatchObject({
+                items: entities,
+                total: 3,
+                current_page: 1,
+                per_page: 15,
+                last_page: 1,
+            });
 
-    //     });
+        });
 
-    // });
+        it("should order by created_at when search params are empty", async () => {
+            const created_at = new Date();
+            const name = "Cast Member";
+            const cast_member_type = new CastMemberType(2);
+            const entities = CastMember.fake()
+                .theCastMembers(3)
+                .withName((index) => `${name} ${index}`)
+                .withCastMemberType(cast_member_type)
+                .withCreatedAt((index) => new Date(created_at.getTime() + index))
+                .build();
+            await repository.bulkInsert(entities);
+            const searchParams = new CastMemberSearchParams();
+            const result = await repository.search(searchParams);
+            expect(result.items.length).toBe(3);
+            const items = result.items;
+            [...items].reverse().forEach((item, index) => {
+                expect(item.name).toBe(`${name} ${index}`);
+                expect(item.created_at.getTime()).toBe(created_at.getTime() + index);
+            });
+            expect(result.items[0].cast_member_id.id).toBe(entities[2].cast_member_id.id);
+            expect(result.items[1].cast_member_id.id).toBe(entities[1].cast_member_id.id);
+            expect(result.items[2].cast_member_id.id).toBe(entities[0].cast_member_id.id);
+        });
+
+        it("should apply pagination and filter", async () => {
+            const created_at = new Date();
+            const cast_member_type = new CastMemberType(2);
+            const entities = [
+                CastMember.fake().aCastMember().withName("A").withCastMemberType(cast_member_type).withCreatedAt(created_at).build(),
+                CastMember.fake().aCastMember().withName("a").withCastMemberType(cast_member_type).withCreatedAt(created_at).build(),
+                CastMember.fake().aCastMember().withName("Aa").withCastMemberType(cast_member_type).withCreatedAt(created_at).build(),
+                CastMember.fake().aCastMember().withName("AA").withCastMemberType(cast_member_type).withCreatedAt(created_at).build()
+            ]
+            await repository.bulkInsert(entities);
+            const searchParams = new CastMemberSearchParams({
+                filter: "a"
+            });
+            const result = await repository.search(searchParams);
+            expect(omit(result, 'items')).toEqual({
+                total: 4,
+                current_page: 1,
+                per_page: 15,
+                last_page: 1,
+            });
+            expect(result.items.length).toBe(4);
+            expect(result.items[0].name).toBe("A");
+            expect(result.items[1].name).toBe("a");
+            expect(result.items[2].name).toBe("Aa");
+            expect(result.items[3].name).toBe("AA");
+
+        });
+
+        it("should apply pagination, filter and sort", async () => {
+            const created_at = new Date();
+            const cast_member_type = new CastMemberType(2);
+            const entities = [
+                CastMember.fake().aCastMember().withName("A").withCastMemberType(cast_member_type).withCreatedAt(created_at).build(),
+                CastMember.fake().aCastMember().withName("a").withCastMemberType(cast_member_type).withCreatedAt(created_at).build(),
+                CastMember.fake().aCastMember().withName("Aa").withCastMemberType(cast_member_type).withCreatedAt(created_at).build(),
+                CastMember.fake().aCastMember().withName("AA").withCastMemberType(cast_member_type).withCreatedAt(created_at).build()
+            ]
+            await repository.bulkInsert(entities);
+            const searchParams = new CastMemberSearchParams({
+                filter: "a",
+                sort: "name",
+                sort_dir: "desc"
+            });
+            const result = await repository.search(searchParams);
+            expect(omit(result, 'items')).toEqual({
+                total: 4,
+                current_page: 1,
+                per_page: 15,
+                last_page: 1,
+            });
+            expect(result.items.length).toBe(4);
+            expect(result.items[0].name).toBe("a");
+            expect(result.items[1].name).toBe("Aa");
+            expect(result.items[2].name).toBe("AA");
+            expect(result.items[3].name).toBe("A");
+        });
+
+        describe("should apply paginate, filter and sort", () => {
+            const entities = [
+                CastMember.fake().aCastMember().withName("c").withCastMemberType(new CastMemberType(1)).build(),
+                CastMember.fake().aCastMember().withName("a").withCastMemberType(new CastMemberType(2)).build(),
+                CastMember.fake().aCastMember().withName("Teste").withCastMemberType(new CastMemberType(1)).build(),
+                CastMember.fake().aCastMember().withName("b").withCastMemberType(new CastMemberType(2)).build(),
+                CastMember.fake().aCastMember().withName("TESTE").withCastMemberType(new CastMemberType(1)).build()
+            ];
+
+            const arrange = [
+                {
+                    searchParams: new CastMemberSearchParams({
+                        page: 1,
+                        per_page: 2,
+                        filter: "teste",
+                        sort: "name",
+                        sort_dir: "asc"
+                    }),
+                    searchResult: new CastMemberSearchResult({
+                        items: entities.filter(e => e.name.toLowerCase().includes("teste")).reverse(),
+                        current_page: 1,
+                        per_page: 2,
+                        total: 2
+                    })
+                },
+                {
+                    searchParams: new CastMemberSearchParams({
+                        page: 1,
+                        per_page: 2,
+                        filter: "c",
+                        sort: "name",
+                        sort_dir: "asc"
+                    }),
+                    searchResult: new CastMemberSearchResult({
+                        items: entities.filter(e => e.name.toLowerCase().includes("c")),
+                        current_page: 1,
+                        per_page: 2,
+                        total: 1
+                    })
+                },
+                {
+                    searchParams: new CastMemberSearchParams({
+                        page: 1,
+                        per_page: 3,
+                        filter: "1",
+                        sort: "name",
+                        sort_dir: "desc"
+                    }),
+                    searchResult: new CastMemberSearchResult({
+                        items: [entities[0], entities[2], entities[4]],
+                        current_page: 1,
+                        per_page: 3,
+                        total: 3
+                    })
+                },
+                {
+                    searchParams: new CastMemberSearchParams({
+                        page: 1,
+                        per_page: 3,
+                        filter: "1",
+                        sort: "name",
+                        sort_dir: "asc"
+                    }),
+                    searchResult: new CastMemberSearchResult({
+                        items: [entities[4], entities[2], entities[0]],
+                        current_page: 1,
+                        per_page: 3,
+                        total: 3
+                    })
+                },
+            ]
+
+            beforeEach(async () => {
+                await repository.bulkInsert(entities);
+            });
+
+            it.each(arrange)("should return $searchParams.page page with $searchParams.per_page items", async (item) => {
+                const result = await repository.search(item.searchParams);
+                expect(omit(result, 'items')).toEqual(omit(item.searchResult, 'items'));
+                expect(result.items.map(e => e.toJson())).toEqual(
+                    item.searchResult.items.map(e => e.toJson())
+                );
+            });
+        });
+
+    });
 
 });

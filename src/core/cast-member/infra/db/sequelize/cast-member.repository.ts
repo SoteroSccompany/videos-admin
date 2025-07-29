@@ -73,8 +73,11 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
         const { rows: models, count } = await this.castMemberModel.findAndCountAll({
             ...(props.filter && {
                 where: {
-                    name: { [Op.like]: `%${props.filter}%` },
-                },
+                    [Op.or]: [
+                        { name: { [Op.like]: `%${props.filter}%` } },
+                        { cast_member_type: props.filter }
+                    ]
+                }
             }),
             ...(props.sort && this.sortableFields.includes(props.sort)
                 ? //? { order: [[props.sort, props.sort_dir]] }
@@ -83,6 +86,10 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
             offset,
             limit,
         });
+        /*
+        
+                        { cast_member_type: { [Op.like]: props.filter } },
+        */
         return new CastMemberSearchResult({
             items: models.map((model) => {
                 return CastMemberModelMapper.toEntity(model);

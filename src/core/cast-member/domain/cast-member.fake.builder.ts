@@ -126,7 +126,8 @@ export class CastMemberFakeBuilder<TBuild = any> {
     private callFactoryCastMemberType(factoryOrValue: PropOrFactory<any>, index: number) {
         return typeof factoryOrValue === 'function'
             ? factoryOrValue(index)
-            : new CastMemberType(factoryOrValue);
+            : typeof factoryOrValue === 'number'
+                ? new CastMemberType(factoryOrValue) : factoryOrValue;
 
     }
 }

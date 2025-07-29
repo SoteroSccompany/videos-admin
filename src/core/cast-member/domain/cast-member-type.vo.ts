@@ -26,7 +26,7 @@ export class CastMemberType extends ValueObject {
         this.cast_member_name = CastMemberName[this._cast_member_type as CastMemberName]
     }
 
-    toString() {
+    toString(): string {
         return `${this._cast_member_type}_${this.cast_member_name}`
     }
 

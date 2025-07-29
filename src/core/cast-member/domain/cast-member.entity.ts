@@ -14,7 +14,7 @@ export type CastMemberConstructorProps = {
 
 export type CastMemberCommand = {
     name: string;
-    cast_member_type: CastMemberType;
+    cast_member_type: number;
 }
 
 
@@ -23,7 +23,7 @@ export class CastMember extends Entity {
     cast_member_id?: Uuid;
     name: string;
     cast_member_type: CastMemberType;
-    created_at?: Date;
+    created_at: Date;
 
     constructor(props: CastMemberConstructorProps) {
         super();
@@ -34,7 +34,8 @@ export class CastMember extends Entity {
     }
 
     static create(props: CastMemberCommand): CastMember {
-        const castMember = new CastMember(props);
+        const castMemberType = new CastMemberType(props.cast_member_type);
+        const castMember = new CastMember({ ...props, cast_member_type: castMemberType });
         castMember.validate(['name'])
         return castMember;
     }

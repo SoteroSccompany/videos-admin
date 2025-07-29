@@ -8,7 +8,7 @@ import { CastMember } from "@core/cast-member/domain/cast-member.entity";
 export class CastMemberInMemoryRepository extends InMemorySearchableRepository<CastMember, Uuid>
     implements ICastMemberRepository {
 
-    sortableFields: string[] = ["name", "created_at"];
+    sortableFields: string[] = ["name", "cast_member_type", "created_at"];
 
 
     protected async applyFilter(items: CastMember[], filter: CastMemberFilter): Promise<CastMember[]> {
