@@ -9,7 +9,7 @@ import { CreateCastMemberInput } from "./create-cast-member.input";
 
 
 
-export class CreateCastMemberUsecase implements IUseCase<CreateCastMemberInput, CastMemberOutput> {
+export class CreateCastMemberUsecase implements IUseCase<CreateCastMemberInput, CreateCastMemberOutput> {
 
     constructor(private readonly castMemberRepository: ICastMemberRepository) { }
 
@@ -24,4 +24,4 @@ export class CreateCastMemberUsecase implements IUseCase<CreateCastMemberInput, 
 }
 
 
-export type CreateCastMemberOutputDto = CastMemberOutput;
+export type CreateCastMemberOutput = CastMemberOutput;

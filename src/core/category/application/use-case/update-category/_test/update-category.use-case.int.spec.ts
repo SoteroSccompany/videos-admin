@@ -36,7 +36,7 @@ describe("UpdateCategoryUseCase Integration Tests", () => {
         const spyUpdate = jest.spyOn(repository, "update");
         const entity = Category.fake().aCategory().withName("test").build();
 
-        repository.insert(entity);
+        await repository.insert(entity);
         let input = new UpdateCategoryInput({ id: entity.category_id.id, name: "testUpdate" })
 
 

@@ -27,8 +27,8 @@ describe('ListCategoriesUseCase Unit Tests', () => {
         let result = new CategorySearchResult({
             items: [],
             current_page: 0,
-            total: 0,
             per_page: 1,
+            total: 0,
         });
 
         const output = useCase["toOutput"](result);
