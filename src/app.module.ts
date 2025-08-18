@@ -3,6 +3,7 @@ import { CategoriesModule } from './nest-modules/categories-module/categories.mo
 import { DatabaseModule } from './nest-modules/database-module/database.module';
 import { ConfigModule } from './nest-modules/config-module/config.module';
 import { SharedModule } from './nest-modules/shared-module/shared.module';
+import { CastMemberModule } from './nest-modules/cast-member/cast-member.module';
 
 
 @Module({
@@ -11,6 +12,7 @@ import { SharedModule } from './nest-modules/shared-module/shared.module';
     DatabaseModule,
     CategoriesModule,
     SharedModule,
+    CastMemberModule
   ],
   controllers: [],
   providers: [],

@@ -17,3 +17,5 @@ export function applyGlobalConfig(app: INestApplication) {
     app.useGlobalInterceptors(new WrapperDataInterceptor(), new ClassSerializerInterceptor(app.get(Reflector)))
     app.useGlobalFilters(new NotFoundErrorFilter(), new EntityValidationErrorFilter());
 }
+
+

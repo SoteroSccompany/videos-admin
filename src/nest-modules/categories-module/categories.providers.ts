@@ -11,23 +11,6 @@ import { getModelToken } from "@nestjs/sequelize";
 
 
 
-// beforeEach(async () => {
-//   const module: TestingModule = await Test.createTestingModule({
-//     imports: [
-//       ConfigModule.forRoot({}),
-//       // DatabaseModule,
-//       CategoriesModule, //Registra o model no sequelize
-//     ], //Pode ser passado dessa forma
-//   })
-//     .overrideProvider(getModelToken(CategoryModel))//Para sobrescrever algum provider, se necessário
-//     .useValue({})
-//     .overrideProvider('CategoryRepository')
-//     .useValue(CategoryInMemoryRepository) //Aqui garante que sera utilizado o outro repositorio
-//     .compile();
-
-//   controller = module.get<CategoriesController>(CategoriesController);
-//   // console.log(module.get(ConfigService).get("DB_HOST"));
-// });
 
 export const REPOSITORIES = {
     CATEGORY_REPOSITORY: {
