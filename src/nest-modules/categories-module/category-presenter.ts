@@ -23,6 +23,7 @@ export class CategoryPresenter {
 }
 
 export class CategoryCollectionPresenter extends CollectionPresenter {
+
     data: CategoryPresenter[];
 
     constructor(output: ListCategoryUseCaseOutput) {
